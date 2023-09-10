@@ -58,7 +58,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ]),
                         child: Column(
                           children: [
-                            const CustomTextFormField(
+                             CustomTextFormField(
                               hitText: 'Email',
                               icon: Icons.email_outlined,
                             ),

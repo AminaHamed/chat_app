@@ -1,4 +1,5 @@
 import 'package:chat_app/core/app_routes.dart';
+import 'package:chat_app/core/utils/dialog_utils.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -19,12 +20,15 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends State<RegisterScreen>
+    implements RegisterNavigator {
   late RegisterViewModel viewModel;
+  var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
     viewModel = RegisterViewModel();
+    viewModel.navigator = this;
     super.initState();
   }
 
@@ -36,90 +40,122 @@ class _RegisterScreenState extends State<RegisterScreen> {
       },
       child: Scaffold(
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const CustomSignStack(text: 'Register'),
-              const SizedBox(
-                height: 15,
-              ),
-              Container(
+        body: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                const CustomSignStack(text: 'Register'),
+                const SizedBox(
+                  height: 15,
+                ),
+                Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 15),
+                    child: FadeAnimation(
+                        1.3,
+                        Container(
+                          decoration: const BoxDecoration(
+                              color: Colors.white,
+                              boxShadow: [
+                                BoxShadow(
+                                    color: AppColors.primaryColor,
+                                    blurRadius: 10,
+                                    offset: Offset(0, 5))
+                              ]),
+                          child: Column(
+                            children: [
+                              CustomTextFormField(
+                                validator: (value) =>
+                                    viewModel.validateUserName(value!),
+                                controller: viewModel.userNameController,
+                                hitText: 'UserName',
+                                icon: Icons.person_outlined,
+                              ),
+                              CustomTextFormField(
+                                validator: (value) =>
+                                    viewModel.validateEmail(value!),
+                                controller: viewModel.emailController,
+                                hitText: 'Email',
+                                icon: Icons.email_outlined,
+                              ),
+                              // SizedBox(height: 5,),
+                              Consumer<RegisterViewModel>(
+                                builder: (context, myProvider, child) {
+                                  return CustomPasswordTextFormField(
+                                    validator: (value) =>
+                                        viewModel.validatePassword(value!),
+                                    controller: viewModel.passwordController,
+                                    onPressed: () {
+                                      viewModel.changeSecurePassword();
+                                    },
+                                    icon: viewModel.securePassword
+                                        ? CupertinoIcons.eye_fill
+                                        : CupertinoIcons.eye_slash_fill,
+                                    obscureText: viewModel.obscureText,
+                                  );
+                                },
+                              ),
+                              CustomTextFormField(
+                                validator: (value) =>
+                                    viewModel.validateConfirmPassword(value!),
+                                hitText: 'Confirm Password',
+                                icon: Icons.password,
+                                controller: viewModel.confirmPasswordController,
+                              ),
+                            ],
+                          ),
+                        ))),
+                const SizedBox(
+                  height: 40,
+                ),
+                Container(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: FadeAnimation(
-                      1.3,
-                      Container(
-                        decoration: const BoxDecoration(
-                            color: Colors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                  color: AppColors.primaryColor,
-                                  blurRadius: 10,
-                                  offset: Offset(0, 5))
-                            ]),
-                        child: Column(
-                          children: [
-                            const CustomTextFormField(
-                              hitText: 'UserName',
-                              icon: Icons.person_outlined,
-                            ),
-                            const CustomTextFormField(
-                              hitText: 'Email',
-                              icon: Icons.email_outlined,
-                            ),
-                            // SizedBox(height: 5,),
-                            Consumer<RegisterViewModel>(
-                              builder: (context, myProvider, child) {
-                                return CustomPasswordTextFormField(
-                                  onPressed: () {
-                                    viewModel.changeSecurePassword();
-                                  },
-                                  icon: viewModel.securePassword
-                                      ? CupertinoIcons.eye_fill
-                                      : CupertinoIcons.eye_slash_fill,
-                                  obscureText: viewModel.obscureText,
-                                );
-                              },
-                            ),
-                            const CustomTextFormField(
-                              hitText: 'Confirm Password',
-                              icon: Icons.password,
-                            ),
-                          ],
-                        ),
-                      ))),
-              const SizedBox(
-                height: 40,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: FadeAnimation(
-                    1.4,
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        CustomButton(
-                            text: 'Register',
-                            onPressed: () {
-                              viewModel.registerWithEmailAndPassword();
-                            }),
-                        const SizedBox(
-                          height: 40,
-                        ),
-                        SwitchSignPageWidget(
-                          onTap: () {
-                            Navigator.pushReplacementNamed(
-                                context, AppRoutes.login.name);
-                          },
-                          text1: "Already have account ?",
-                          text2: 'Sign In',
-                        )
-                      ],
-                    )),
-              )
-            ],
+                      1.4,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          CustomButton(
+                              text: 'Register',
+                              onPressed: () {
+                                if (formKey.currentState?.validate() == false)
+                                  return;
+                                viewModel.registerWithEmailAndPassword();
+                              }),
+                          const SizedBox(
+                            height: 40,
+                          ),
+                          SwitchSignPageWidget(
+                            onTap: () {
+                              Navigator.pushReplacementNamed(
+                                  context, AppRoutes.login.name);
+                            },
+                            text1: "Already have account ?",
+                            text2: 'Sign In',
+                          )
+                        ],
+                      )),
+                )
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void showLoading() {
+    DialogUtils.showProgressDialog(context, 'Loading' '');
+  }
+
+  @override
+  void hideLoading() {
+    DialogUtils.hideDialog(context);
+  }
+
+  @override
+  void showMessage(String m) {
+    DialogUtils.showMessage(context, m);
   }
 }
