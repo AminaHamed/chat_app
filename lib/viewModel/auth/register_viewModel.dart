@@ -1,43 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-abstract class RegisterNavigator {
-  void showLoading();
+import 'baseAuthViewModel.dart';
 
-  void showMessage(String message);
-
-  void hideLoading();
-}
-
-class RegisterViewModel extends ChangeNotifier {
+class RegisterViewModel extends BaseAuthViewModel {
   TextEditingController userNameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  RegisterNavigator? navigator;
-  bool securePassword = true;
-  bool obscureText = false;
 
   String? validateUserName(String value) {
     if (value.trim().isEmpty) {
       return 'Enter Your name';
     }
-    return null;
-  }
-
-  String? validateEmail(String value) {
-    final emailRegExp = RegExp(r'^[\w-]+(\.[\w-]+)*@([\w-]+\.)+[a-zA-Z]{2,7}$');
-    if (!emailRegExp.hasMatch(value) || value.trim().isEmpty) {
-      return 'Enter a valid email address';
-    }
-    return null;
-  }
-
-  String? validatePassword(String value) {
-    if (value.length < 6) {
-      return 'Password must be at least 6 characters long';
-    }
-
     return null;
   }
 
@@ -51,12 +24,6 @@ class RegisterViewModel extends ChangeNotifier {
     return null;
   }
 
-  changeSecurePassword() {
-    securePassword = !securePassword;
-    obscureText = !obscureText;
-    notifyListeners();
-  }
-
   Future<void> registerWithEmailAndPassword() async {
     try {
       navigator?.showLoading();
@@ -66,11 +33,22 @@ class RegisterViewModel extends ChangeNotifier {
         password: passwordController.text,
       );
       navigator?.hideLoading();
+      passwordController.text = '';
+      userNameController.text = '';
+      emailController.text = '';
+      confirmPasswordController.text = '';
       //TODO handel successful register
       navigator?.showMessage(user.user?.uid ?? '');
     } catch (e) {
       navigator?.hideLoading();
       navigator?.showMessage(e.toString());
     }
+  }
+
+  @override
+  void dispose() {
+    userNameController.dispose();
+    confirmPasswordController.dispose();
+    super.dispose();
   }
 }

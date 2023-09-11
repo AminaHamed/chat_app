@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../core/app_colors.dart';
+import '../../../viewModel/auth/baseAuthViewModel.dart';
 import '../../../viewModel/auth/register_viewModel.dart';
 import '../../widget/custom_button.dart';
 import '../../widget/custom_loginTextFormField.dart';
@@ -21,7 +22,7 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen>
-    implements RegisterNavigator {
+    implements AuthNavigator {
   late RegisterViewModel viewModel;
   var formKey = GlobalKey<FormState>();
 
