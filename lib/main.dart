@@ -16,10 +16,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: AppTheme.myTheme,
       title: 'Chat App',
       routes: routes,
-      initialRoute: AppRoutes.register.name,
+      initialRoute: AppRoutes.home.name,
     );
   }
 }

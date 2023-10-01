@@ -147,7 +147,7 @@ class _RegisterScreenState extends State<RegisterScreen>
 
   @override
   void showLoading() {
-    DialogUtils.showProgressDialog(context, 'Loading' '');
+    DialogUtils.showProgressDialog(context, 'Loading');
   }
 
   @override
@@ -158,5 +158,10 @@ class _RegisterScreenState extends State<RegisterScreen>
   @override
   void showMessage(String m) {
     DialogUtils.showMessage(context, m);
+  }
+
+  @override
+  void goToHome() {
+    Navigator.pushReplacementNamed(context, AppRoutes.home.name);
   }
 }

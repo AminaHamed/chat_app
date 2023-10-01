@@ -1,11 +1,8 @@
+import 'package:chat_app/core/base/base.dart';
 import 'package:flutter/material.dart';
 
-abstract class AuthNavigator {
-  void showLoading();
-
-  void showMessage(String message);
-
-  void hideLoading();
+abstract class AuthNavigator extends BaseNavigator {
+  void goToHome();
 }
 
 class BaseAuthViewModel extends ChangeNotifier {

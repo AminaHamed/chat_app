@@ -29,6 +29,7 @@ class _LoginScreenState extends State<LoginScreen> implements AuthNavigator {
   void initState() {
     viewModel = LoginViewModel();
     viewModel.navigator = this;
+    // viewModel.checkLogin();
     super.initState();
   }
 
@@ -143,5 +144,10 @@ class _LoginScreenState extends State<LoginScreen> implements AuthNavigator {
   @override
   void showMessage(String message) {
     DialogUtils.showMessage(context, message);
+  }
+
+  @override
+  void goToHome() {
+    Navigator.pushReplacementNamed(context, AppRoutes.home.name);
   }
 }

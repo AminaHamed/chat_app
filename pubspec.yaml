@@ -39,6 +39,7 @@ dependencies:
   firebase_core: ^2.15.1
   firebase_auth: ^4.9.0
   simple_animations: ^5.0.2
+  cloud_firestore: ^4.9.1
 
 
 

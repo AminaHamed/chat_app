@@ -1,3 +1,6 @@
+import 'package:chat_app/DB/dataBase.dart';
+import 'package:chat_app/model/myUser.dart';
+import 'package:chat_app/model/sharedData.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -32,13 +35,24 @@ class RegisterViewModel extends BaseAuthViewModel {
         email: emailController.text,
         password: passwordController.text,
       );
+      var data = await MyDataBase.insertUser(MyUser(
+          id: user.user?.uid ?? "",
+          userName: userNameController.text,
+          email: emailController.text,
+          password: passwordController.text));
+
+      passwordController.clear();
+      userNameController.clear();
+      emailController.clear();
+      confirmPasswordController.clear();
       navigator?.hideLoading();
-      passwordController.text = '';
-      userNameController.text = '';
-      emailController.text = '';
-      confirmPasswordController.text = '';
-      //TODO handel successful register
-      navigator?.showMessage(user.user?.uid ?? '');
+
+      if (data != null) {
+        SharedData.userData = data;
+        navigator?.goToHome();
+      } else {
+        navigator?.showMessage("can't insert user");
+      }
     } catch (e) {
       navigator?.hideLoading();
       navigator?.showMessage(e.toString());
