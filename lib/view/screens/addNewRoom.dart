@@ -3,7 +3,7 @@ import 'package:chat_app/model/room.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../core/utils/dialog_utils.dart';
+import '../../core/base/base.dart';
 import '../../viewModel/addNewRoomViewModel.dart';
 import '../widget/custom_button.dart';
 
@@ -14,16 +14,22 @@ class AddNewRoom extends StatefulWidget {
   State<AddNewRoom> createState() => _AddNewRoomState();
 }
 
-class _AddNewRoomState extends State<AddNewRoom>
+class _AddNewRoomState extends BaseState<AddNewRoom, AddNewRoomViewModel>
     implements AddNewRoomNavigator {
-  late AddNewRoomViewModel viewModel;
   var formKey = GlobalKey<FormState>();
+  // late AddNewRoomViewModel viewModel;
+
   Room selectedRoom = roomsList[0];
 
   @override
+  AddNewRoomViewModel initViewModel() {
+    return AddNewRoomViewModel();
+  }
+
+  @override
   void initState() {
-    viewModel = AddNewRoomViewModel();
-    viewModel.navigator = this;
+    // viewModel = AddNewRoomViewModel();
+    // viewModel.navigator = this;
 
     super.initState();
   }
@@ -133,21 +139,6 @@ class _AddNewRoomState extends State<AddNewRoom>
         ),
       ),
     );
-  }
-
-  @override
-  void hideLoading() {
-    DialogUtils.hideDialog(context);
-  }
-
-  @override
-  void showLoading() {
-    DialogUtils.showProgressDialog(context, 'Loading');
-  }
-
-  @override
-  void showMessage(String message) {
-    DialogUtils.showMessage(context, message);
   }
 
   @override

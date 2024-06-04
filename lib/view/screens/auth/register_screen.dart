@@ -1,5 +1,5 @@
 import 'package:chat_app/core/app_routes.dart';
-import 'package:chat_app/core/utils/dialog_utils.dart';
+import 'package:chat_app/core/base/base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,16 +21,20 @@ class RegisterScreen extends StatefulWidget {
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen>
+class _RegisterScreenState extends BaseState<RegisterScreen, RegisterViewModel>
     implements AuthNavigator {
-  late RegisterViewModel viewModel;
   var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    viewModel = RegisterViewModel();
-    viewModel.navigator = this;
+    // viewModel = RegisterViewModel();
+    // viewModel.navigator = this;
     super.initState();
+  }
+
+  @override
+  RegisterViewModel initViewModel() {
+    return RegisterViewModel();
   }
 
   @override
@@ -119,8 +123,9 @@ class _RegisterScreenState extends State<RegisterScreen>
                           CustomButton(
                               text: 'Register',
                               onPressed: () {
-                                if (formKey.currentState?.validate() == false)
+                                if (formKey.currentState?.validate() == false) {
                                   return;
+                                }
                                 viewModel.registerWithEmailAndPassword();
                               }),
                           const SizedBox(
@@ -143,21 +148,6 @@ class _RegisterScreenState extends State<RegisterScreen>
         ),
       ),
     );
-  }
-
-  @override
-  void showLoading() {
-    DialogUtils.showProgressDialog(context, 'Loading');
-  }
-
-  @override
-  void hideLoading() {
-    DialogUtils.hideDialog(context);
-  }
-
-  @override
-  void showMessage(String m) {
-    DialogUtils.showMessage(context, m);
   }
 
   @override

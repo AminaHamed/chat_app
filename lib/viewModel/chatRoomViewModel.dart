@@ -1,14 +1,12 @@
 import 'package:chat_app/DB/dataBase.dart';
+import 'package:chat_app/core/base/base.dart';
 import 'package:chat_app/model/message.dart';
 import 'package:chat_app/model/sharedData.dart';
 import 'package:flutter/material.dart';
 
-abstract class MyNavigator {
-  void showMessage(String m);
-}
+abstract class MyNavigator extends BaseNavigator {}
 
-class ChatRoomViewModel extends ChangeNotifier {
-  MyNavigator? navigator;
+class ChatRoomViewModel extends BaseViewModel<MyNavigator> {
   TextEditingController controller = TextEditingController();
 
   Future<void> send(String roomID) async {

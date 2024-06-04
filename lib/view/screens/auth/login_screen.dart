@@ -1,6 +1,6 @@
 import 'package:chat_app/core/app_colors.dart';
 import 'package:chat_app/core/app_routes.dart';
-import 'package:chat_app/core/utils/dialog_utils.dart';
+import 'package:chat_app/core/base/base.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,16 +21,19 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> implements AuthNavigator {
-  late LoginViewModel viewModel;
+class _LoginScreenState extends BaseState<LoginScreen, LoginViewModel>
+    implements AuthNavigator {
   var formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
-    viewModel = LoginViewModel();
-    viewModel.navigator = this;
     // viewModel.checkLogin();
     super.initState();
+  }
+
+  @override
+  LoginViewModel initViewModel() {
+    return LoginViewModel();
   }
 
   @override
@@ -105,8 +108,9 @@ class _LoginScreenState extends State<LoginScreen> implements AuthNavigator {
                           CustomButton(
                               text: 'LogIn',
                               onPressed: () {
-                                if (formKey.currentState?.validate() == false)
+                                if (formKey.currentState?.validate() == false) {
                                   return;
+                                }
                                 viewModel.loginWithEmailAndPassword();
                               }),
                           const SizedBox(
@@ -129,21 +133,6 @@ class _LoginScreenState extends State<LoginScreen> implements AuthNavigator {
         ),
       ),
     );
-  }
-
-  @override
-  void hideLoading() {
-    DialogUtils.hideDialog(context);
-  }
-
-  @override
-  void showLoading() {
-    DialogUtils.showProgressDialog(context, 'loading..');
-  }
-
-  @override
-  void showMessage(String message) {
-    DialogUtils.showMessage(context, message);
   }
 
   @override

@@ -5,10 +5,9 @@ abstract class AuthNavigator extends BaseNavigator {
   void goToHome();
 }
 
-class BaseAuthViewModel extends ChangeNotifier {
+class BaseAuthViewModel extends BaseViewModel<AuthNavigator> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
-  AuthNavigator? navigator;
   bool securePassword = true;
   bool obscureText = false;
 

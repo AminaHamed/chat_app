@@ -8,10 +8,9 @@ abstract class AddNewRoomNavigator extends BaseNavigator {
   void goBack();
 }
 
-class AddNewRoomViewModel extends ChangeNotifier {
+class AddNewRoomViewModel extends BaseViewModel <AddNewRoomNavigator>{
   TextEditingController nameController = TextEditingController();
   TextEditingController desController = TextEditingController();
-  AddNewRoomNavigator? navigator;
   late String typeName;
   late String typeImage;
 

@@ -1,6 +1,6 @@
 import 'package:chat_app/DB/dataBase.dart';
 import 'package:chat_app/core/app_colors.dart';
-import 'package:chat_app/core/utils/dialog_utils.dart';
+import 'package:chat_app/core/base/base.dart';
 import 'package:chat_app/model/message.dart';
 import 'package:chat_app/model/sharedData.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,14 +18,11 @@ class ChatRoomScreen extends StatefulWidget {
   State<ChatRoomScreen> createState() => _ChatRoomScreenState();
 }
 
-class _ChatRoomScreenState extends State<ChatRoomScreen>
-    implements MyNavigator {
-  late ChatRoomViewModel viewModel;
-
+class _ChatRoomScreenState
+    extends BaseState<ChatRoomScreen, ChatRoomViewModel> {
   @override
-  void initState() {
-    viewModel = ChatRoomViewModel();
-    super.initState();
+  ChatRoomViewModel initViewModel() {
+    return ChatRoomViewModel();
   }
 
   @override
@@ -136,10 +133,5 @@ class _ChatRoomScreenState extends State<ChatRoomScreen>
         ),
       ),
     );
-  }
-
-  @override
-  void showMessage(String m) {
-    DialogUtils.showMessage(context, m);
   }
 }
